@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albums mosaic</title>
+    <style>
+        body {
+
+            height: 100%;
+            margin: 20px;
+            padding: 0;
+            border: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+
+        }
+
+        .albumGrid {
+            aspect-ratio: 1;
+            width: 90vw;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            max-width: 80vh;
+
+        }
+
+        .albumGrid div {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: .5s;
+        }
+    </style>
+    <script src="vibrant.js"></script>
+
+    <script src="vibrant.min.js"></script>
+</head>
+
+<body>
+    <main>
+        <div class="albumGrid">
+            <div class="albumImage">
+                <div alt="" id="cover1"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover2"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover3"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover4"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover5"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover6"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover7"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover8"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover9"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover10"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover11"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover12"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover13"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover15"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover16"></div>
+            </div>
+            <div class="albumImage">
+                <div alt="" id="cover17"></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <form id="form">
+            <input type="text" class="text" id="usernameText" placeholder="username"><button type="submit"
+                id="submitButton">Submit</button>
+        </form>
+    </footer>
+</body>
+<script>
+    var username = "bradleysans";
+    async function getAlbums(user) {
+        if (user === undefined) {
+            user = username;
+        }
+        var fetchUrl = "https://ws.audioscrobbler.com/2.0/?method=user.getTopAlbums&user=" + user + "&api_key=04734fa847d8fdf0b2b2652391c304e2&format=json&limit=16";
+        const response = await fetch(fetchUrl);
+        const albums = await response.json();
+        console.log(albums);
+        var topAlbumImages = [];
+        var topAlbumTexts = [];
+
+        albums.topalbums.album.forEach(element => {
+            var albumText = element.name + ", by " + element.artist.name
+            var image = element.image[0]["#text"]
+            console.log(image)
+
+            topAlbumImages.push(image)
+            topAlbumTexts.push(albumText)
+        });
+        console.log(topAlbumImages);
+        var albumContainers = document.querySelectorAll(".albumImage div");
+        console.log(albumContainers)
+        albumContainers.forEach((element, index) => {
+            console.log(topAlbumTexts[index], element, topAlbumImages[index])
+            // element.src = topAlbumImages[index];
+            element.title = topAlbumTexts[index];
+            Vibrant.from(topAlbumImages[index])
+                .quality(1)
+                .clearFilters()
+                // ...
+                .getPalette()
+                .then((palette) => {
+                    console.log(topAlbumTexts[index], palette)
+                    var rgb = palette.Vibrant._rgb
+                    console.log(topAlbumTexts[index], rgb)
+                    var rgbString = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")"
+                    console.log(topAlbumTexts[index], palette)
+                    element.style.backgroundColor = rgbString
+
+
+                })
+
+
+        });
+
+    }
+    getAlbums();
+
+
+
+    function getNew() {
+        event.preventDefault();
+        var query = document.querySelector("#usernameText").value;
+        console.log(query);
+        username = query;
+        getAlbums(username);
+    }
+
+
+    const form = document.getElementById('form')
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault()
+
+        getNew()
+    })
+
+</script>
+
+</html>
