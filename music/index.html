@@ -34,6 +34,8 @@
             object-fit: cover;
             object-position: center;
             transition: .5s;
+            background-size: cover;
+            background-position: center;
         }
     </style>
     <script src="vibrant.js"></script>
@@ -127,12 +129,12 @@
         console.log(albumContainers)
         albumContainers.forEach((element, index) => {
             console.log(topAlbumTexts[index], element, topAlbumImages[index])
-            // element.src = topAlbumImages[index];
+            // element.style.backgroundImage = "url(" + topAlbumImages[index] + ")";
             element.title = topAlbumTexts[index];
             Vibrant.from(topAlbumImages[index])
                 .quality(1)
                 .clearFilters()
-                // ...
+
                 .getPalette()
                 .then((palette) => {
                     console.log(topAlbumTexts[index], palette)
