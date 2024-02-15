@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    var gfAPIKey = "AIzaSyC9G2isevxHoTz8EdMZ40F9JVoWM59RT20";
+    var gfUrl = "https://webfonts.googleapis.com/v1/webfonts?sort=POPULARITY&key=" + gfAPIKey;
+    async function getFonts() {
+
+
+        const response = await fetch(gfUrl);
+        const fonts = await response.json();
+        console.log(fonts);
+        var fontNames = [];
+        var fontUrls = [];
+        for (let index = 0; index < 17; index++) {
+            const element = fonts.items[index];
+            var name = element.family;
+            var urls = element.files;
+            var trueUrl;
+            var trueWeight;
+            if (urls[500] !== undefined) {
+                trueUrl = urls[500]
+                trueWeight = 500;
+            } else if (urls[600] !== undefined) {
+                trueUrl = urls[600]
+                trueWeight = 600;
+            } else if (urls[400] !== undefined) {
+                trueUrl = urls[400]
+                trueWeight = 400
+            } else if (urls[700] !== undefined) {
+                trueUrl = urls[700]
+                trueWeight = 700;
+            } else if (urls[300] !== undefined) {
+                trueUrl = urls[300]
+                trueWeight = 300;
+            } else if (urls[800] !== undefined) {
+                trueUrl = urls[800]
+                trueWeight = 800;
+            } else if (urls[200] !== undefined) {
+                trueUrl = urls[200]
+                trueWeight = 200;
+            } else if (urls[900] !== undefined) {
+                trueUrl = urls[900]
+                trueWeight = 900;
+            } else if (urls[100] !== undefined) {
+                trueUrl = urls[100]
+                trueWeight = 100;
+            } else {
+                trueUrl = "no";
+
+            }
+            if (trueUrl != "no") {
+                fontNames.push(name);
+                fontUrls.push(trueUrl);
+                const font = new FontFace(name, "url(" + trueUrl + ")");
+                document.fonts.add(font);
+            }
+        }
+        // fonts.items.forEach(element => {
+
+
+
+
+        console.log(fontNames, fontUrls);
+        console.log(document.fonts);
+    };
+    getFonts();
+</script>
+
+<body>
+    <main>
+        <span class="fontHere"></span><span class="fontHere"></span><span class="fontHere"></span><span
+            class="fontHere"></span><span class="fontHere"></span><span class="fontHere"></span><span
+            class="fontHere"></span><span class="fontHere"></span><span class="fontHere"></span><span
+            class="fontHere"></span><span class="fontHere"></span><span class="fontHere"></span><span
+            class="fontHere"></span><span class="fontHere"></span><span class="fontHere"></span><span
+            class="fontHere"></span>
+    </main>
+</body>
+
+</html>
