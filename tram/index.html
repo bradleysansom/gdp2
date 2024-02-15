@@ -6,17 +6,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRAM TRAM TRAM</title>
 </head>
-<script>
-    async function getTramData() {
-        const response = await fetch("tram.json");
-        const data = await response.json();
-        console.log(data);
+<style>
+    main {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
+
+    .stop {
+        background: orange;
+        border-radius: 100%;
+    }
+
+    body {
+        border: 0;
+        padding: 0;
+        margin: 0;
+
+    }
+</style>
+<script>
+    var data;
+    var filtered;
+
+    var stopLocations = {}
+
+
+
+
+    async function getTramData() {
+        const response = await fetch("https://bradleysans.uk/gdp2/tram/tram.json");
+        data = await response.json();
+        console.log(data);
+        fillFromOrigin("Chorlton");
+
+    }
+
+    function getDestinationsByOrigin(origin) {
+        console.log("Trams from", origin, "to:");
+        filtered = data.filter(
+            function (data) { return data.on == origin }
+        );
+    }
+
+    function getOriginsByDestination(destination) {
+        console.log("Trams to", destination, "from:");
+        filtered = data.filter(
+            function (data) { return data.off == destination }
+        );
+    }
+    function fillFromOrigin(origin) {
+        document.querySelector("#originName").innerHTML = origin;
+        getDestinationsByOrigin(origin);
+
+        var totalPassengers = 0;
+        filtered.forEach(element => {
+            totalPassengers += element.count;
+            // console.log(totalPassengers);
+        });
+        console.log(origin, "has", totalPassengers, "passengers, of which:");
+
+        filtered.forEach(element => {
+
+            var currentStop = element.off;
+            if (currentStop != "N/A" || currentStop == element.on) {
+                // console.log("debug", totalPassengers)
+                var currentStopReplaced = currentStop.replaceAll(" ", "_")
+                var currentCount = element.count;
+
+                var proportion = 1 / (totalPassengers / currentCount);
+                console.log("•", currentCount, "got off at", currentStop, ", which is", proportion, "% of the total")
+
+                var maxWidth = screen.width;
+                var proportionOfWidth = maxWidth * proportion;
+
+                var container = document.createElement("div");
+                container.id = currentStopReplaced;
+                container.className = "stop";
+                container.title = currentCount + " passengers from " + origin + " get off at " + currentStop + " (" + (proportion * 100).toString().slice(0, 5) + "%)";
+                container.style.width = proportionOfWidth + "px";
+                container.style.height = proportionOfWidth + "px";
+                document.querySelector("main").append(container);
+
+            }
+        });
+    }
+
+    // console.log(getDestinationsByOrigin("Trafford Bar"));
+    // console.log(getOriginsByDestination("Trafford Bar"));
+
+
+    const form = document.getElementById('form')
+
+    /* form.addEventListener('submit', (event) => {
+        event.preventDefault()
+
+        getDestinationsByOrigin("Chorlton")
+    }) */
+
+
     getTramData()
 </script>
 
 <body>
-    hello
+    <header>
+        <form id="form">
+            <input type="text" class="text" id="originText" placeholder="Origin"><button type="submit"
+                id="submitButton">Submit</button>
+        </form>
+    </header>
+    <h1 id="originName"> </h1>
+    <main>
+
+    </main>
 </body>
 
 </html>
