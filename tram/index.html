@@ -11,11 +11,17 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        overflow: hidden;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
     }
 
     .stop {
         background: orange;
         border-radius: 100%;
+        flex-shrink: 0;
+        overflow: hidden;
     }
 
     body {
@@ -24,12 +30,363 @@
         margin: 0;
 
     }
+
+    #map {
+        height: 800px;
+    }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+
+<body>
+    <header>
+        <form id="form">
+            <input type="text" class="text" id="originText" placeholder="Origin"><button type="submit"
+                id="submitButton">Submit</button>
+        </form>
+    </header>
+    <h1 id="originName"> </h1>
+    <main>
+
+    </main>
+    <div id="map">
+
+    </div>
+</body>
+<script>
+
+    var map = L.map('map').setView([53.4809, - 2.2779], 11);
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.{ext}', {
+        minZoom: 0,
+        maxZoom: 20,
+        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'png'
+    }).addTo(map);
+    var layerGroup = L.layerGroup().addTo(map);
+
+
+
+
+
+</script>
 <script>
     var data;
     var filtered;
 
-    var stopLocations = {}
+    var stopLocations = {
+        "stops": [
+            {
+                "name": "Heaton Park",
+                "coordinates": [53.5305052393, -2.2672470445]
+            }, {
+                "name": "Bowker Vale",
+                "coordinates": [53.5248928945, -2.2498954101]
+            }, {
+                "name": "St Peter's Square",
+                "coordinates": [53.4782182293, -2.2431081393]
+            }, {
+                "name": "Crumpsall",
+                "coordinates": [53.5172931833, -2.2410447161]
+            }, {
+                "name": "Bury",
+                "coordinates": [53.590958632, -2.2970957346]
+            }, {
+                "name": "Radcliffe",
+                "coordinates": [53.5623899316, -2.3210307459]
+            }, {
+                "name": "Whitefield",
+                "coordinates": [53.5512115751, -2.2952051111]
+            }, {
+                "name": "Besses O' th' Barn",
+                "coordinates": [53.5420651307, -2.2861234691]
+            }, {
+                "name": "Prestwich",
+                "coordinates": [53.5333182757, -2.2819023349]
+            }, {
+                "name": "Victoria",
+                "coordinates": [53.4877421261, -2.2417174125]
+            }, {
+                "name": "Market Street",
+                "coordinates": [53.4819375024, -2.238836318]
+            }, {
+                "name": "Piccadilly Gardens",
+                "coordinates": [53.4802724384, -2.236987811]
+            }, {
+                "name": "Piccadilly",
+                "coordinates": [53.4770298302, -2.2304092919]
+            }, {
+                "name": "Deansgate - Castlefield",
+                "coordinates": [53.4747237826, -2.2503454594]
+            }, {
+                "name": "Pomona",
+                "coordinates": [53.4651935124, -2.2780294948]
+            }, {
+                "name": "Trafford Bar",
+                "coordinates": [53.4617587999, -2.2772539486]
+            }, {
+                "name": "Shudehill",
+                "coordinates": [53.4852776589, -2.2391066292]
+            }, {
+                "name": "Firswood",
+                "coordinates": [53.4512107555, -2.2776764321]
+            }, {
+                "name": "Chorlton",
+                "coordinates": [53.4428250722, -2.2735081151]
+            }, {
+                "name": "St Werburgh's Road",
+                "coordinates": [53.4388412989, -2.2657145447]
+            }, {
+                "name": "Sale Water Park",
+                "coordinates": [53.4282433092, -2.2908313313]
+            }, {
+                "name": "Northern Moor",
+                "coordinates": [53.4145544826, -2.2881513123]
+            }, {
+                "name": "Wythenshawe Park",
+                "coordinates": [53.4077357466, -2.2956997904]
+            }, {
+                "name": "Moor Road",
+                "coordinates": [53.4033107222, -2.2951582047]
+            }, {
+                "name": "Baguley",
+                "coordinates": [53.3968492434, -2.2926735303]
+            }, {
+                "name": "Roundthorn",
+                "coordinates": [53.3926441504, -2.2891721972]
+            }, {
+                "name": "Martinscroft",
+                "coordinates": [53.3918700253, -2.2797792265]
+            }, {
+                "name": "Benchill",
+                "coordinates": [53.3872398523, -2.2562153902]
+            }, {
+                "name": "Crossacres",
+                "coordinates": [53.3833174666, -2.2562644211]
+            }, {
+                "name": "Robinswood Road",
+                "coordinates": [53.3763956977, -2.2586906852]
+            }, {
+                "name": "Peel Hall",
+                "coordinates": [53.3737132444, -2.2503949954]
+            }, {
+                "name": "Shadowmoss",
+                "coordinates": [53.3679619667, -2.2524452592]
+            }, {
+                "name": "Manchester Airport",
+                "coordinates": [53.3653594952, -2.2722561498]
+            }, {
+                "name": "New Islington",
+                "coordinates": [53.4810493679, -2.2198151131]
+            }, {
+                "name": "New Islington",
+                "coordinates": [53.4810493679, -2.2198151131]
+            }, {
+                "name": "Holt Town",
+                "coordinates": [53.4832805049, -2.2120629808]
+            }, {
+                "name": "Etihad Campus",
+                "coordinates": [53.48537388, -2.2013834129]
+            }, {
+                "name": "Velopark",
+                "coordinates": [53.4822885127, -2.1930154769]
+            }, {
+                "name": "Clayton Hall",
+                "coordinates": [53.4827941592, -2.1823514852]
+            }, {
+                "name": "Edge Lane",
+                "coordinates": [53.4808853353, -2.1652927417]
+            }, {
+                "name": "Cemetery Road",
+                "coordinates": [53.4798803727, -2.1550048902]
+            }, {
+                "name": "Droylsden",
+                "coordinates": [53.4794704547, -2.1446657345]
+            }, {
+                "name": "Audenshaw",
+                "coordinates": [53.4782093022, -2.1309653768]
+            }, {
+                "name": "Ashton Moss",
+                "coordinates": [53.4836767552, -2.1219229142]
+            }, {
+                "name": "Ashton West",
+                "coordinates": [53.490250128, -2.109721205]
+            }, {
+                "name": "Ashton-under-Lyne",
+                "coordinates": [53.4903504854, -2.0980345788]
+            }, {
+                "name": "Queens Road",
+                "coordinates": [53.5016807825, -2.2266494916]
+            }, {
+                "name": "Monsall",
+                "coordinates": [53.501096583, -2.2106544254]
+            }, {
+                "name": "Central Park",
+                "coordinates": [53.5015926359, -2.1991400887]
+            }, {
+                "name": "Newton Heath and Moston",
+                "coordinates": [53.5042267329, -2.1837232589]
+            }, {
+                "name": "Failsworth",
+                "coordinates": [53.5106281642, -2.1629235996]
+            }, {
+                "name": "Hollinwood",
+                "coordinates": [53.5199984264, -2.1473264614]
+            }, {
+                "name": "South Chadderton",
+                "coordinates": [53.5267187383, -2.1451820867]
+            }, {
+                "name": "Cornbrook",
+                "coordinates": [53.4700194787, -2.2675495027]
+            }, {
+                "name": "Abraham Moss",
+                "coordinates": [53.5106676302, -2.2357186392]
+            }, {
+                "name": "Dane Road",
+                "coordinates": [53.4300039735, -2.3116614149]
+            }, {
+                "name": "Sale",
+                "coordinates": [53.4241853331, -2.3191394411]
+            }, {
+                "name": "Brooklands",
+                "coordinates": [53.4170730157, -2.3260595267]
+            }, {
+                "name": "Timperley",
+                "coordinates": [53.4042544039, -2.3384036505]
+            }, {
+                "name": "Navigation Road",
+                "coordinates": [53.3957955321, -2.3433163641]
+            }, {
+                "name": "Altrincham",
+                "coordinates": [53.3872091274, -2.3475158907]
+            }, {
+                "name": "Eccles",
+                "coordinates": [53.4829836037, -2.3351657527]
+            }, {
+                "name": "Ladywell",
+                "coordinates": [53.4839997121, -2.3266550151]
+            }, {
+                "name": "Salford Quays",
+                "coordinates": [53.4704131132, -2.2839674299]
+            }, {
+                "name": "Exchange Quay",
+                "coordinates": [53.4676986039, -2.2823433015]
+            }, {
+                "name": "Harbour City",
+                "coordinates": [53.4741850056, -2.2906199446]
+            }, {
+                "name": "Anchorage",
+                "coordinates": [53.4743378737, -2.2860274637]
+            }, {
+                "name": "Broadway",
+                "coordinates": [53.4747951082, -2.2949315704]
+            }, {
+                "name": "Langworthy",
+                "coordinates": [53.4806439282, -2.2961628569]
+            }, {
+                "name": "Weaste",
+                "coordinates": [53.4824216266, -2.3075148627]
+            }, {
+                "name": "Old Trafford",
+                "coordinates": [53.4560743794, -2.2850068072]
+            }, {
+                "name": "Stretford",
+                "coordinates": [53.4460264212, -2.3038078823]
+            }, {
+                "name": "MediaCityUK",
+                "coordinates": [53.4721717265, -2.2971112068]
+            }, {
+                "name": "Freehold",
+                "coordinates": [53.5376871081, -2.1380277899]
+            }, {
+                "name": "Oldham King Street",
+                "coordinates": [53.5395711032, -2.1174322118]
+            }, {
+                "name": "Oldham Central",
+                "coordinates": [53.5403139516, -2.1121345029]
+            }, {
+                "name": "Oldham Mumps",
+                "coordinates": [53.5424034135, -2.103459906]
+            }, {
+                "name": "Derker",
+                "coordinates": [53.5498235973, -2.1016186463]
+            }, {
+                "name": "Shaw and Crompton",
+                "coordinates": [53.5761674215, -2.0895481845]
+            }, {
+                "name": "Newhey",
+                "coordinates": [53.6008299984, -2.0946585416]
+            }, {
+                "name": "Milnrow",
+                "coordinates": [53.608122029, -2.112073856]
+            }, {
+                "name": "Kingsway Business Park",
+                "coordinates": [53.6110951947, -2.1237052529]
+            }, {
+                "name": "Newbold",
+                "coordinates": [53.613394931, -2.1354992055]
+            }, {
+                "name": "Rochdale Railway Station",
+                "coordinates": [53.6110247492, -2.1544526694]
+            }, {
+                "name": "Rochdale Town Centre",
+                "coordinates": [53.6173341878, -2.1553798789]
+            }, {
+                "name": "Barlow Moor Road",
+                "coordinates": [53.4328481051, -2.269276432]
+            }, {
+                "name": "Withington",
+                "coordinates": [53.4327822155, -2.2493378112]
+            }, {
+                "name": "Burton Road",
+                "coordinates": [53.4291721195, -2.2406360726]
+            }, {
+                "name": "West Didsbury",
+                "coordinates": [53.424467407, -2.2360528894]
+            }, {
+                "name": "Didsbury Village",
+                "coordinates": [53.4167534695, -2.2285999437]
+            }, {
+                "name": "East Didsbury",
+                "coordinates": [53.4120746108, -2.2172659574]
+            }, {
+                "name": "Wythenshawe Town Centre",
+                "coordinates": [53.3800462057, -2.2637514069]
+            }, {
+                "name": "Westwood",
+                "coordinates": [53.5423538912, -2.1258579193]
+            }, {
+                "name": "Exchange Square",
+                "coordinates": [53.4844652692, -2.2426735994]
+            }, {
+                "name": "The Trafford Centre",
+                "coordinates": [53.4679165082, -2.3477940921]
+            }, {
+                "name": "Wharfside",
+                "coordinates": [53.4662371372, -2.2875084333]
+            }, {
+                "name": "Imperial War Museum",
+                "coordinates": [53.4686012552, -2.2967749705]
+            }, {
+                "name": "Village",
+                "coordinates": [53.4674095941, -2.309073014]
+            }, {
+                "name": "Parkway",
+                "coordinates": [53.4682676521, -2.3243797567]
+            }, {
+                "name": "Barton Dock Road",
+                "coordinates": [53.4657339268, -2.3419892513]
+            }
+
+
+        ]
+    };
+    console.log(stopLocations);
+
+
 
 
 
@@ -65,6 +422,7 @@
             // console.log(totalPassengers);
         });
         console.log(origin, "has", totalPassengers, "passengers, of which:");
+        layerGroup.clearLayers();
 
         filtered.forEach(element => {
 
@@ -75,25 +433,82 @@
                 var currentCount = element.count;
 
                 var proportion = 1 / (totalPassengers / currentCount);
-                console.log("•", currentCount, "got off at", currentStop, ", which is", proportion, "% of the total")
+                console.log("•", currentCount, "got off at", currentStop, ", which is", proportion * 100, "% of the total")
 
                 var maxWidth = screen.width;
-                var proportionOfWidth = maxWidth * proportion;
+                var proportionOfWidth = 2000 * proportion;
 
-                var container = document.createElement("div");
-                container.id = currentStopReplaced;
-                container.className = "stop";
-                container.title = currentCount + " passengers from " + origin + " get off at " + currentStop + " (" + (proportion * 100).toString().slice(0, 5) + "%)";
-                container.style.width = proportionOfWidth + "px";
-                container.style.height = proportionOfWidth + "px";
-                document.querySelector("main").append(container);
+                var found = stopLocations.stops.find(function (element) {
+                    return element.name == currentStop;
+                });
+                console.log(found);
+                //createSpots(origin, element, currentStop, currentStopReplaced, currentCount, totalPassengers, proportion, proportionOfWidth)
+                createMarkers(origin, element, currentStop, currentStopReplaced, currentCount, totalPassengers, proportion)
 
             }
         });
     }
+    function createSpots(origin, element, currentStop, currentStopReplaced, currentCount, totalPassengers, proportion, proportionOfWidth) {
+
+
+
+
+        var container = document.createElement("div");
+        container.id = currentStopReplaced;
+        container.className = "stop";
+        container.title = currentCount + " passengers from " + origin + " get off at " + currentStop + " (" + (proportion * 100).toString().slice(0, 5) + "%)";
+        container.style.width = proportionOfWidth + "px";
+        container.style.height = proportionOfWidth + "px";
+        document.querySelector("main").append(container);
+
+    }
+    function createMarkers(origin, element, currentStop, currentStopReplaced, currentCount, totalPassengers, proportion) {
+        console.log("ELEMENT", element)
+        var coordinates = stopLocations.stops.find(function (element) {
+            return element.name == currentStop;
+        }).coordinates;
+        console.log(coordinates);
+        console.log("creating marker at", coordinates)
+        var calculatedWidth = 2500 * proportion;
+        var circle = L.circle(coordinates, {
+            color: 'orange',
+            fillColor: 'orange',
+            fillOpacity: 0.7,
+            radius: calculatedWidth
+        }).bindPopup(currentCount + " passengers from " + origin + " get off at " + currentStop + " (" + (proportion * 100).toString().slice(0, 5) + "%)").addTo(layerGroup);
+        console.log("created marker")
+
+
+
+
+    }
 
     // console.log(getDestinationsByOrigin("Trafford Bar"));
     // console.log(getOriginsByDestination("Trafford Bar"));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     const form = document.getElementById('form')
@@ -107,18 +522,5 @@
 
     getTramData()
 </script>
-
-<body>
-    <header>
-        <form id="form">
-            <input type="text" class="text" id="originText" placeholder="Origin"><button type="submit"
-                id="submitButton">Submit</button>
-        </form>
-    </header>
-    <h1 id="originName"> </h1>
-    <main>
-
-    </main>
-</body>
 
 </html>
